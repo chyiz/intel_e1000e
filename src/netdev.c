@@ -3714,7 +3714,7 @@ static void e1000_configure_rx(struct e1000_adapter *adapter)
 #ifdef HAVE_PM_QOS_REQUEST_LIST_NEW
 		pm_qos_update_request(&adapter->pm_qos_req, lat);
 #elif defined(HAVE_PM_QOS_REQUEST_LIST)
-		pm_qos_update_request(&adapter->pm_qos_req, lat);
+		pm_qos_update_request(adapter->netdev->pm_qos_req, lat);
 #else
 		pm_qos_update_requirement(PM_QOS_CPU_DMA_LATENCY,
 					  adapter->netdev->name, lat);
@@ -3724,7 +3724,7 @@ static void e1000_configure_rx(struct e1000_adapter *adapter)
 		pm_qos_update_request(&adapter->pm_qos_req,
 				      PM_QOS_DEFAULT_VALUE);
 #elif defined(HAVE_PM_QOS_REQUEST_LIST)
-		pm_qos_update_request(&adapter->pm_qos_req,
+		pm_qos_update_request(adapter->netdev->pm_qos_req,
 				      PM_QOS_DEFAULT_VALUE);
 #else
 		pm_qos_update_requirement(PM_QOS_CPU_DMA_LATENCY,
@@ -5178,7 +5178,7 @@ int e1000e_open(struct net_device *netdev)
 	pm_qos_add_request(&adapter->pm_qos_req, PM_QOS_CPU_DMA_LATENCY,
 			   PM_QOS_DEFAULT_VALUE);
 #elif defined(HAVE_PM_QOS_REQUEST_LIST)
-	pm_qos_add_request(&adapter->pm_qos_req, PM_QOS_CPU_DMA_LATENCY,
+	adapter->netdev->pm_qos_req = pm_qos_add_request(PM_QOS_CPU_DMA_LATENCY,
 			   PM_QOS_DEFAULT_VALUE);
 #else
 	pm_qos_add_requirement(PM_QOS_CPU_DMA_LATENCY, adapter->netdev->name,
@@ -5231,7 +5231,7 @@ err_req_irq:
 #ifdef HAVE_PM_QOS_REQUEST_LIST_NEW
 	pm_qos_remove_request(&adapter->pm_qos_req);
 #elif defined(HAVE_PM_QOS_REQUEST_LIST)
-	pm_qos_remove_request(&adapter->pm_qos_req);
+	pm_qos_remove_request(adapter->netdev->pm_qos_req);
 #else
 	pm_qos_remove_requirement(PM_QOS_CPU_DMA_LATENCY,
 				  adapter->netdev->name);
@@ -5318,7 +5318,7 @@ int e1000e_close(struct net_device *netdev)
 #ifdef HAVE_PM_QOS_REQUEST_LIST_NEW
 	pm_qos_remove_request(&adapter->pm_qos_req);
 #elif defined(HAVE_PM_QOS_REQUEST_LIST)
-	pm_qos_remove_request(&adapter->pm_qos_req);
+	pm_qos_remove_request(adapter->netdev->pm_qos_req);
 #else
 	pm_qos_remove_requirement(PM_QOS_CPU_DMA_LATENCY,
 				  adapter->netdev->name);

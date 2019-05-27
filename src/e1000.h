@@ -383,12 +383,6 @@ struct e1000_adapter {
 	struct ptp_clock *ptp_clock;
 	struct ptp_clock_info ptp_clock_info;
 #endif
-#ifdef HAVE_PM_QOS_REQUEST_LIST_NEW
-	struct pm_qos_request pm_qos_req;
-
-#elif defined(HAVE_PM_QOS_REQUEST_LIST)
-	struct pm_qos_request_list pm_qos_req;
-#endif
 	s32 ptp_delta;
 	u16 eee_advert;
 };
